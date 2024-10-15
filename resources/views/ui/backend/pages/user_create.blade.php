@@ -16,20 +16,35 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="">
+                    <h4>Add new user</h4> <hr>
+                    <form action="{{ route('user.store') }}" method="POST">
+                        @csrf
                         <div class="mb-2">
-                            <label>Name</label>
-                            <input type="text" name="name" class="form-control">
+                            <label>Name <abbr title="required" class="text-danger">*</abbr></label>
+                            <input type="text" name="name" class="form-control" required>
                         </div>
 
                         <div class="mb-2">
-                            <label>Email</label>
-                            <input type="email" name="email" class="form-control">
+                            <label>Email <abbr title="required" class="text-danger">*</abbr></label>
+                            <input type="email" name="email" class="form-control" required>
                         </div>
 
                         <div class="mb-2">
-                            <label>Password</label>
-                            <input type="password" name="password" class="form-control">
+                            <label>Password <abbr title="required" class="text-danger">*</abbr></label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+
+                        <div class="mb-2">
+                            <label>Role <abbr title="required" class="text-danger">*</abbr></label>
+                            <select name="role" class="form-control" required>
+                                <option selected disabled>Role</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Editor">Editor</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-2">
+                            <button type="submit" class="btn btn-success w-100">Save</button>
                         </div>
 
                     </form>

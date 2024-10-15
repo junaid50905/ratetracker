@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [FrontendController::class, 'welcome']);
 
 
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('dashboard', [BackendController::class, 'dashboard'])->name('dashboard');
     Route::get('exchange-rate', [BackendController::class, 'exchangeRate'])->name('exchange_rate');
     Route::post('exchange-rate/store', [BackendController::class, 'exchangeRateStore'])->name('exchange_rate.store');
@@ -35,5 +35,11 @@ Route::prefix('admin')->group(function () {
     Route::get('users', [BackendController::class, 'users'])->name('users');
     Route::get('user-create', [BackendController::class, 'userCreate'])->name('user.create');
     Route::post('user-store', [BackendController::class, 'userStore'])->name('user.store');
+
+
 });
 
+//authentication
+Route::get('admin/login', [BackendController::class, 'login'])->name('login');
+Route::post('admin/login/store', [BackendController::class, 'loginStore'])->name('login.store');
+Route::post('logout', [BackendController::class, 'logout'])->name('logout');

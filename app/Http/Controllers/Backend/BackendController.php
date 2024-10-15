@@ -8,10 +8,9 @@ use App\Models\ExchangeRate;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use FFMpeg\FFMpeg;
 use getID3;
-
-
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class BackendController extends Controller
 {
@@ -203,7 +202,7 @@ class BackendController extends Controller
      */
     public function users()
     {
-        $users = User::all();
+        $users = User::orderBy('id', 'desc')->get();
         return view('ui.backend.pages.users', compact('users'));
 
     }
@@ -219,7 +218,65 @@ class BackendController extends Controller
      */
     public function userStore(Request $request)
     {
+        // Validate incoming request
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required',
+            'role' => 'required'
+        ]);
 
-        return $request->all();
+        // Create a new user and hash the password
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $request->role
+        ]);
+
+        return redirect()->route('users')->withSuccess(__('Added new user'));
+    }
+
+    /**
+     * login
+     */
+    public function login()
+    {
+        if (Auth::user()) {
+            return redirect()->back();
+        }
+        return view('ui.backend.pages.login');
+    }
+    /**
+     * loginStore
+     */
+    public function loginStore(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        // Check if credentials are correct
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate(); // Regenerate session
+            return redirect()->intended('admin/dashboard');
+        }
+
+        // If login fails
+        // return back()->withErrors([
+        //     'email' => 'Invalid credentials.',
+        // ])->onlyInput('email');
+        return redirect()->back()->withErrors(__('Invalid crediantials'));
+
+
+    }
+    /**
+     * logout
+     */
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('admin/login');
     }
 }

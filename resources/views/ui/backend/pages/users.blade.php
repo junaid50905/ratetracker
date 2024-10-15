@@ -17,28 +17,21 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th> User </th>
-                                    <th> First name </th>
-                                    <th> Progress </th>
-                                    <th> Amount </th>
-                                    <th> Deadline </th>
+                                    <th> # </th>
+                                    <th> Name </th>
+                                    <th> Email </th>
+                                    <th> Role </th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach ($users as $user)
                                 <tr>
-                                    <td class="py-1">
-                                        <img src="../../assets/images/faces/face1.jpg" alt="image" />
-                                    </td>
-                                    <td> Herman Beck </td>
-                                    <td>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-success" role="progressbar" style="width: 25%"
-                                                aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                    </td>
-                                    <td> $ 77.99 </td>
-                                    <td> May 15, 2015 </td>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $user->name }}</td>
+                                    <td>{{ $user->email }}</td>
+                                    <td>{{ $user->role }}</td>
                                 </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

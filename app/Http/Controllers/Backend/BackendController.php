@@ -111,6 +111,67 @@ class BackendController extends Controller
     /**
      * contentStore
      */
+    // public function contentStore(Request $request)
+    // {
+    //     if ($request->type == 'image') { // image
+    //         $request->validate([
+    //             'image' => 'required',
+    //             'imageDuration' => 'required'
+    //         ]);
+
+    //         if ($request->hasFile('image')) {
+    //             $imageDuration = $request->imageDuration * 1000;
+
+    //             $image = $request->file('image');
+    //             $imageName = time() . '_' . $image->getClientOriginalName();
+
+    //             $image->move(public_path('ui/uploads/image'), $imageName);
+
+    //             Content::create([
+    //                 'type' => 'image',
+    //                 'image' => $imageName,
+    //                 'duration' => $imageDuration,
+    //             ]);
+    //             return redirect()->route('content')->withSuccess(__('Added new image'));
+    //         }
+    //     } elseif ($request->type == 'video') { // video
+    //         $request->validate([
+    //             'video' => 'required',
+    //         ]);
+
+    //         if ($request->hasFile('video')) {
+    //             $video = $request->file('video');
+    //             $videoName = time() . '_' . $video->getClientOriginalName();
+
+    //             $video->move(public_path('ui/uploads/video'), $videoName);
+
+    //             $getID3 = new getID3;
+    //             $video_file = $getID3->analyze('ui/uploads/video/'.$videoName);
+    //             $duration = $video_file['playtime_seconds'] * 1000;
+
+    //             Content::create([
+    //                 'type' => 'video',
+    //                 'video' => $videoName,
+    //                 'duration' => $duration,
+    //             ]);
+
+    //             return redirect()->route('content')->withSuccess(__('Added new video content'));
+    //         }
+    //     } elseif ($request->type == 'currency') { // currency
+    //         $request->validate([
+    //             'currencyDuration' => 'required'
+    //         ]);
+    //         $currencyDuration = $request->currencyDuration * 1000;
+
+    //         Content::create([
+    //             'type' => 'currency',
+    //             'duration' => $currencyDuration,
+    //         ]);
+    //         return redirect()->route('content')->withSuccess(__('Currency content duration has been set'));
+    //     }
+
+    //     return redirect()->back()->with('success', __('Content uploaded successfully.'));
+    // }
     public function contentStore(Request $request)
     {
         if ($request->type == 'image') { // image
@@ -135,27 +196,40 @@ class BackendController extends Controller
                 return redirect()->route('content')->withSuccess(__('Added new image'));
             }
         } elseif ($request->type == 'video') { // video
+
             $request->validate([
                 'video' => 'required',
             ]);
+
 
             if ($request->hasFile('video')) {
                 $video = $request->file('video');
                 $videoName = time() . '_' . $video->getClientOriginalName();
 
+
                 $video->move(public_path('ui/uploads/video'), $videoName);
 
                 $getID3 = new getID3;
-                $video_file = $getID3->analyze('ui/uploads/video/'.$videoName);
-                $duration = $video_file['playtime_seconds'] * 1000;
+                // $video_file = $getID3->analyze('ui/uploads/video/' . $videoName);
+                $video_file = $getID3->analyze(public_path('ui/uploads/video/' . $videoName));
 
-                Content::create([
-                    'type' => 'video',
-                    'video' => $videoName,
-                    'duration' => $duration,
-                ]);
 
-                return redirect()->route('content')->withSuccess(__('Added new video content'));
+
+                // Check if 'playtime_seconds' exists and calculate duration, otherwise fallback
+                $duration = isset($video_file['playtime_seconds']) ? $video_file['playtime_seconds'] * 1000 : 0;
+
+
+                if ($duration > 0) {
+                    Content::create([
+                        'type' => 'video',
+                        'video' => $videoName,
+                        'duration' => $duration,
+                    ]);
+
+                    return redirect()->route('content')->withSuccess(__('Added new video content'));
+                } else {
+                    return redirect()->route('content')->withErrors(__('Unable to detect video duration. Please check the file.'));
+                }
             }
         } elseif ($request->type == 'currency') { // currency
             $request->validate([
@@ -172,6 +246,7 @@ class BackendController extends Controller
 
         return redirect()->back()->with('success', __('Content uploaded successfully.'));
     }
+
 
     /**
      * contentDestroy

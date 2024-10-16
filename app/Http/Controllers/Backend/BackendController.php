@@ -201,7 +201,6 @@ class BackendController extends Controller
                 'video' => 'required',
             ]);
 
-
             if ($request->hasFile('video')) {
                 $video = $request->file('video');
                 $videoName = time() . '_' . $video->getClientOriginalName();

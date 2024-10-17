@@ -116,14 +116,17 @@
                     <div class="table-responsive" style="margin: 0 10vw;">
                         <table class="table table-bordered table-striped">
                             @php
-                                $profit_rates = DB::table('profit_rates')->where('profit_id', $profit->id)->orderBy('id', 'asc')->get();
+                                $profit_rates = DB::table('profit_rates')
+                                    ->where('profit_id', $profit->id)
+                                    ->orderBy('id', 'asc')
+                                    ->get();
                             @endphp
                             <tbody>
                                 @foreach ($profit_rates as $profit_rate)
-                                <tr>
-                                    <td>{{ $profit_rate->title ?? '' }}</td>
-                                    <td>{{ $profit_rate->rate ?? '' }}</td>
-                                </tr>
+                                    <tr>
+                                        <td>{{ $profit_rate->title ?? '' }}</td>
+                                        <td>{{ $profit_rate->rate ?? '' }}</td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -174,6 +177,34 @@
             });
         });
     </script>
+
+    {{-- script for refresh the page after completing slider --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var carousel = document.getElementById('carouselExampleInterval');
+            var totalItems = document.querySelectorAll('.carousel-item').length;
+
+            carousel.addEventListener('slid.bs.carousel', function(event) {
+                var activeIndex = event.to; // Get the index of the new active carousel item
+                var video = event.relatedTarget.querySelector('video');
+
+                // If it's a video, pause and reset it to play from the start
+                if (video) {
+                    video.pause();
+                    video.currentTime = 0;
+                    video.play();
+                }
+
+                // If the last item is reached, refresh the page
+                if (activeIndex === totalItems - 1) {
+                    setTimeout(function() {
+                        location.reload();
+                    }, event.relatedTarget.dataset.bsInterval); // Refresh after the slide interval
+                }
+            });
+        });
+    </script>
+
 
 </body>
 

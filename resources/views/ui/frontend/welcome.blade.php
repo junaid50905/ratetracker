@@ -27,7 +27,7 @@
 
         div#carouselExampleInterval {
             height: 100vh;
-            margin: -16px;
+
         }
 
         .bg-primary {
@@ -36,18 +36,39 @@
             height: 100vh;
         }
     </style>
+
+    <style>
+        nav img {
+            /*height: 10vh;*/
+            width: 21vw;
+            /*object-fit: contain;*/
+        }
+    </style>
     <title>Slides show</title>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
-<body class="p-3 m-0 border-0 bd-example m-0 border-0">
+<body>
+
+    {{-- <div id="header" class="w-100">
+      <div class="container">
+        <div class="row mt-3">
+          <nav class="navbar navbar-expand-lg navbar-dark w-100">
+            <a class="navbar-brand" href="#"><img id="mainLogo"
+                src="{{ asset('ui/frontend/assets/images/Shahjalal-Islami-Bank-PLC.png') }}"
+                alt="HerediaEstudio"></a>
+          </nav>
+        </div>
+      </div>
+    </div> --}}
 
     <!-- Example Code -->
     <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item bg-primary active" data-bs-interval="{{ $exchange_rate_duration }}">
                 <h1 class="text-danger text-center"
-                    style="margin-top: 15vh; font-size: calc(20px + 3vw);; margin-bottom: 5vh;">Cash Foreign Currency
+                    style="margin-top: 5vh; font-size: calc(20px + 3vw); margin-bottom: 5vh;">Foreign Currency
+                    Exchange Rate
                 </h1>
                 <div class="table-responsive" style="margin: 0 10vw;">
                     <table class="table table-bordered table-striped">
@@ -83,7 +104,7 @@
 
             @foreach ($videos as $video)
                 <div class="carousel-item" data-bs-interval="{{ $video->duration }}">
-                    <video class="w-100 h-100 video-player" autoplay muted playsinline>
+                    <video class=" video-player" autoplay muted playsinline>
                         <source src="{{ asset('ui/uploads/video') }}/{{ $video->video }}" type="video/mp4">
                     </video>
                 </div>

@@ -8,9 +8,24 @@
     --cyanbg: #39ACFF;
 }
 
+* {
+    box-sizing: border-box;
+}
+
+body {
+    box-sizing: content-box;
+    width: 100%;
+}
+
+.video-player {
+    height: 100vh;
+    width: 100vw;
+    object-fit: cover;
+}
+
 #mainLogo {
-    width: 220px;
-    height: 43px;
+    /*width: 220px;*/
+    /*height: 43px;*/
 }
 
 #carrousel {}
@@ -52,11 +67,13 @@
 }
 
 #header {
-    position: absolute;
+    position: fixed;
     z-index: 999;
     color: var(--mainblue);
     height: 117px;
-    background: rgb(255 255 255 / 0%);
+    background: rgb(78 78 78 / 53%);
+    justify-content: center;
+    display: grid;
 }
 
 #navbarText {

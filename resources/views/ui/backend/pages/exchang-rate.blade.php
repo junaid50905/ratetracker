@@ -4,12 +4,22 @@
     Exchange rate
 @endsection
 
+@section('styles')
+    <style>
+        .table td img {
+            width: 30px;
+            height: 30px;
+            object-fit: cover;
+        }
+    </style>
+@endsection
+
 @section('main-panel')
 
 
 
     <div class="row">
-        <div class="col-sm-8">
+        <div class="col-sm-9">
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Currencies exchange rates</h4>
@@ -18,6 +28,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>Image</th>
                                     <th>Currency</th>
                                     <th>Code</th>
                                     <th>Buying (Taka)</th>
@@ -32,6 +43,7 @@
                                     @endphp
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
+                                        <td><img src="{{ $currency->flag }}"></td>
                                         <td>{{ $currency->name }} ({{ $currency->symbol }})</td>
                                         <td>{{ $currency->code }}</td>
                                         <td>{{ $exchange->buying_rate }}</td>
@@ -59,12 +71,12 @@
         </div>
 
         <!-- Add or Edit form -->
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <div class="row">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4>{{ isset($editExchange) ? 'Update exchange rate' : 'Add new exchange rate' }}</h4>
+                            <h4 class="card-title">{{ isset($editExchange) ? 'Update exchange rate' : 'Add exchange rate' }}</h4>
                             <hr>
                             <form
                                 action="{{ isset($editExchange) ? route('exchange_rate.update', $editExchange->id) : route('exchange_rate.store') }}"

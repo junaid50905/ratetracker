@@ -13,6 +13,12 @@
             </a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" href="{{ route('profit') }}">
+                <i class="menu-icon mdi mdi-swap-horizontal"></i>
+                <span class="menu-title">Profit</span>
+            </a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="{{ route('content') }}">
                 <i class="menu-icon mdi mdi-play-box-outline"></i>
                 <span class="menu-title">Contents</span>

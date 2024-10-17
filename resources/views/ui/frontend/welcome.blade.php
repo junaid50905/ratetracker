@@ -44,6 +44,14 @@
             /*object-fit: contain;*/
         }
     </style>
+
+    <style>
+        .currency_logo {
+            width: 6vw;
+            height: 6vh;
+            object-fit: cover;
+        }
+    </style>
     <title>Slides show</title>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
@@ -65,6 +73,7 @@
     <!-- Example Code -->
     <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
+            {{-- currency exchange rate --}}
             <div class="carousel-item bg-primary active" data-bs-interval="{{ $exchange_rate_duration }}">
                 <h1 class="text-danger text-center"
                     style="margin-top: 5vh; font-size: calc(20px + 3vw); margin-bottom: 5vh;">Foreign Currency
@@ -86,7 +95,8 @@
                                     $currency = DB::table('currencies')->find($exchange_rate->currency_id);
                                 @endphp
                                 <tr>
-                                    <td>{{ $currency->name }} ({{ $currency->symbol }})</td>
+                                    <td>{{ $currency->symbol }} {{ $currency->name }} <img class="currency_logo"
+                                            src="{{ $currency->flag }}" alt=""></td>
                                     <td>{{ $currency->code }}</td>
                                     <td>{{ $exchange_rate->buying_rate }}</td>
                                     <td>{{ $exchange_rate->selling_rate }}</td>
@@ -96,12 +106,37 @@
                     </table>
                 </div>
             </div>
+            {{-- profit --}}
+            @foreach ($profits as $profit)
+                <div class="carousel-item bg-primary" data-bs-interval="{{ $profit_duration }}">
+                    <h1 class="text-danger text-center"
+                        style="margin-top: 5vh; font-size: calc(20px + 3vw); margin-bottom: 5vh;">
+                        {{ $profit->title }}
+                    </h1>
+                    <div class="table-responsive" style="margin: 0 10vw;">
+                        <table class="table table-bordered table-striped">
+                            @php
+                                $profit_rates = DB::table('profit_rates')->where('profit_id', $profit->id)->orderBy('id', 'asc')->get();
+                            @endphp
+                            <tbody>
+                                @foreach ($profit_rates as $profit_rate)
+                                <tr>
+                                    <td>{{ $profit_rate->title ?? '' }}</td>
+                                    <td>{{ $profit_rate->rate ?? '' }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endforeach
+            {{-- image --}}
             @foreach ($images as $image)
                 <div class="carousel-item" data-bs-interval="{{ $image->duration }}">
                     <img src="{{ asset('ui/uploads/image') }}/{{ $image->image }}" class="d-block w-100">
                 </div>
             @endforeach
-
+            {{-- video --}}
             @foreach ($videos as $video)
                 <div class="carousel-item" data-bs-interval="{{ $video->duration }}">
                     <video class=" video-player" autoplay muted playsinline>

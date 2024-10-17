@@ -7,11 +7,12 @@
     <title>@yield('title')</title>
     <!-- plugins:css -->
     @include('ui.backend.includes.css')
+    @yield('styles')
 
   </head>
   <body class="with-welcome-text">
     <div class="container-scroller">
-      
+
       <!-- partial:partials/_navbar.html -->
       @include('ui.backend.includes.top_nav')
 
@@ -27,7 +28,7 @@
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->
-          
+
           <!-- partial -->
         </div>
         <!-- main-panel ends -->

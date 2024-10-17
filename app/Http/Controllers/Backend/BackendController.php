@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\Content;
 use App\Models\ExchangeRate;
+use App\Models\Profit;
+use App\Models\ProfitRate;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -106,7 +108,9 @@ class BackendController extends Controller
      */
     public function createNewContent()
     {
-        return view('ui.backend.pages.create_new_content');
+        $currencyExists = Content::where('type', 'currency')->exists();
+        $profitExists = Content::where('type', 'profit')->exists();
+        return view('ui.backend.pages.create_new_content', compact('currencyExists', 'profitExists'));
     }
     /**
      * contentStore
@@ -241,6 +245,17 @@ class BackendController extends Controller
                 'duration' => $currencyDuration,
             ]);
             return redirect()->route('content')->withSuccess(__('Currency content duration has been set'));
+        } elseif ($request->type == 'profit') { // currency
+            $request->validate([
+                'profitDuration' => 'required'
+            ]);
+            $profitDuration = $request->profitDuration * 1000;
+
+            Content::create([
+                'type' => 'profit',
+                'duration' => $profitDuration,
+            ]);
+            return redirect()->route('content')->withSuccess(__('Profit content duration has been set'));
         }
 
         return redirect()->back()->with('success', __('Content uploaded successfully.'));
@@ -352,5 +367,68 @@ class BackendController extends Controller
     {
         Auth::logout();
         return redirect('admin/login');
+    }
+    /**
+     * profit
+     */
+    public function profit()
+    {
+        $profits = Profit::orderBy('id', 'desc')->get();
+        return view('ui.backend.pages.profit.index', compact('profits'));
+    }
+    /**
+     * profitStore
+     */
+    public function profitStore(Request $request)
+    {
+        $request->validate([
+            'title' => 'required'
+        ]);
+
+        $allInputs = $request->except('_token');
+        Profit::create($allInputs);
+
+        return redirect()->back()->withSuccess(__('Add new profit'));
+    }
+    /**
+     * profitDestroy
+     */
+    public function profitDestroy($profitId)
+    {
+        Profit::destroy($profitId);
+        return redirect()->back()->withSuccess(__('Profit has been deleted'));
+    }
+    /**
+     * profitRates
+     */
+    public function profitRates($profitId)
+    {
+        $profit = Profit::findOrFail($profitId);
+        $profit_rates = ProfitRate::where('profit_id', $profitId)->orderBy('id', 'desc')->get();
+        return view('ui.backend.pages.profit_rate.index', compact('profit', 'profit_rates'));
+    }
+    /**
+     * addProfitRate
+     */
+    public function addProfitRate(Request $request, $profitId)
+    {
+        $request->validate([
+            'title' => 'required',
+            'rate' => 'required',
+        ]);
+        ProfitRate::create([
+            'profit_id' => $profitId,
+            'title' => $request->title,
+            'rate' => $request->rate
+        ]);
+        return redirect()->back()->withSuccess(__('Added new rate'));
+    }
+    /**
+     * profitRateDestroy
+     */
+    public function profitRateDestroy($profitId, $profitRateId)
+    {
+        ProfitRate::where('id', $profitRateId)->where('profit_id', $profitId)->delete();
+        return redirect()->back()->withSuccess(__('Profit rate has been deleted'));
     }
 }

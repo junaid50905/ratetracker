@@ -27,7 +27,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>File Type</th>
+                                    <th>Content Type</th>
                                     <th>File</th>
                                     <th>Duration</th>
                                     <th>Action</th>
@@ -48,7 +48,7 @@
                                                 </video>
                                             </td>
                                         @else
-                                            <td>Currency</td>
+                                            <td></td>
                                         @endif
                                         <td>{{ $content->duration / 1000 }} Seconds</td>
                                         <td>
@@ -62,7 +62,7 @@
                                                 </form>
                                             </div>
                                             <div>
-                                                @if ($content->type == 'image' || $content->type == 'currency')
+                                                @if ($content->type != 'video')
                                                     <i class="mdi mdi-clock-edit-outline text-warning ms-3"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#exampleModal-{{ $content->id }}"

@@ -23,7 +23,12 @@
                                 <option selected disabled>Select Content Type</option>
                                 <option value="image">Image</option>
                                 <option value="video">Video</option>
-                                <option value="currency">Currency</option>
+                                @if ($currencyExists == false)
+                                    <option value="currency">Currency</option>
+                                @endif
+                                @if ($profitExists == false)
+                                    <option value="profit">Profit</option>
+                                @endif
                             </select>
                         </div>
 
@@ -57,6 +62,15 @@
                             </div>
                         </div>
 
+                        <!-- Profit Section -->
+                        <div id="profitType" style="display: none;">
+                            <div class="form-group">
+                                <label>Duration</label>
+                                <input type="number" class="form-control" name="profitDuration" min="1">
+                                <small class="text-muted">Write only number of seconds (Eg: 30)</small>
+                            </div>
+                        </div>
+
                         <button class="btn btn-success btn-sm w-100" type="submit">Save</button>
                     </form>
 
@@ -74,6 +88,7 @@
             const imageTypeDiv = document.getElementById('imageType');
             const videoTypeDiv = document.getElementById('videoType');
             const currencyTypeDiv = document.getElementById('currencyType');
+            const profitTypeDiv = document.getElementById('profitType');
             const imageFileInput = document.getElementById('imageFile');
             const videoFileInput = document.getElementById('videoFile');
 
@@ -85,6 +100,7 @@
                 imageTypeDiv.style.display = 'none';
                 videoTypeDiv.style.display = 'none';
                 currencyTypeDiv.style.display = 'none';
+                profitTypeDiv.style.display = 'none';
 
                 // Clear file inputs
                 imageFileInput.value = '';
@@ -97,6 +113,8 @@
                     videoTypeDiv.style.display = 'block';
                 } else if (selectedType === 'currency') {
                     currencyTypeDiv.style.display = 'block';
+                }else if (selectedType === 'profit') {
+                    profitTypeDiv.style.display = 'block';
                 }
             });
         });
